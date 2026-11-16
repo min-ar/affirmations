@@ -20,15 +20,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.affirmations.model.Affirmation
 import com.example.affirmations.ui.theme.AffirmationsTheme
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import com.example.affirmations.data.Datasource
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AffirmationsTheme {
-                AffirmationCard(
-                    affirmation = Affirmation(R.string.affirmation1, R.drawable.image1)
-                )
+//                AffirmationCard(
+//                    affirmation = Affirmation(R.string.affirmation1, R.drawable.image1)
+//                )
+                AffirmationsApp()
             }
         }
     }
@@ -55,10 +59,20 @@ fun AffirmationCard(affirmation: Affirmation, modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun AffirmationCardPreview() {
-    AffirmationsTheme {
-        AffirmationCard(Affirmation(R.string.affirmation1, R.drawable.image1))
+fun AffirmationsApp() {
+    val affirmationList = Datasource().loadAffirmations()
+    AffirmationList(affirmationList = affirmationList)
+}
+
+@Composable
+fun AffirmationList(affirmationList: List<Affirmation>, modifier: Modifier = Modifier) {
+    LazyColumn(modifier = modifier) {
+        items(affirmationList) { affirmation ->
+            AffirmationCard(
+                affirmation = affirmation,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
     }
 }
